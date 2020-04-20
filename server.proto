@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import public "messages.proto";
+option java_package = "se.proto";
+
+
+service IndicesService {
+    rpc GetStockMarketIndices (SubscribeRequest) returns (stream Response) {
+    }
+}
