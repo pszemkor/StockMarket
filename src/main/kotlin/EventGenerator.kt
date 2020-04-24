@@ -3,6 +3,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import kotlin.random.Random
 
+//todo: in the future this class will be reading indexes' values from rest api
 class EventGenerator {
     private val subscriptions = CopyOnWriteArrayList<((Stockmarket.Response) -> Unit)>()
 
