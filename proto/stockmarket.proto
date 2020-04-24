@@ -17,10 +17,14 @@ enum Index {
     NASDAQ = 12;
 }
 
-message SubscribeRequest {
-    repeated Index indexes = 1;
+message SingleIndexPattern {
+    Index index = 1;
     double lowerBound = 2;
     double upperBound = 3;
+}
+
+message SubscribeRequest {
+    repeated SingleIndexPattern indexes = 1;
 }
 
 message Response {

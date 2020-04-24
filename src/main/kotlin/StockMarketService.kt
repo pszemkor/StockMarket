@@ -7,7 +7,7 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
 
     override fun getStockMarketIndices(request: Stockmarket.SubscribeRequest?, responseObserver: StreamObserver<Stockmarket.Response>?) {
         val callback = { response: Stockmarket.Response ->
-            if (isObserved(response, request!!)) {
+            if (isEventObserved(response, request!!)) {
                 responseObserver?.onNext(response)
             }
         }
@@ -17,19 +17,23 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
 
     private fun setOnCancelHandler(responseObserver: StreamObserver<Stockmarket.Response>?, callback: (Stockmarket.Response) -> Unit) {
         if (responseObserver is ServerCallStreamObserver<Stockmarket.Response>) {
-            responseObserver.setOnCancelHandler(Runnable { -> eventGenerator.removeSubscription(callback) })
+            responseObserver.setOnCancelHandler(Runnable { eventGenerator.removeSubscription(callback) })
         }
     }
 
-    private fun isObserved(response: Stockmarket.Response, request: Stockmarket.SubscribeRequest): Boolean {
-        return isInRange(request, response) && isIndexObserved(request, response)
+    private fun isEventObserved(response: Stockmarket.Response, request: Stockmarket.SubscribeRequest): Boolean {
+        request.indexesList.forEach { pattern ->
+            println(pattern.index.toString() + "  " + response.value + " " + isInRange(pattern, response))
+            if (pattern.index == response.index && isInRange(pattern, response)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private fun isIndexObserved(request: Stockmarket.SubscribeRequest, response: Stockmarket.Response) =
-            request.indexesList.contains(response.index)
 
-    private fun isInRange(request: Stockmarket.SubscribeRequest, response: Stockmarket.Response) =
-            (request.lowerBound >= response.value || request.lowerBound < 0) &&
-                    (request.upperBound <= response.value || request.upperBound < 0)
+    private fun isInRange(request: Stockmarket.SingleIndexPattern, response: Stockmarket.Response) =
+            (request.lowerBound <= response.value || request.lowerBound < 0) &&
+                    (request.upperBound >= response.value || request.upperBound < 0)
 
 }

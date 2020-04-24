@@ -23,7 +23,7 @@ class SimpleClient
         while (true) {
             try {
                 val stockMarketIndices = blockingStub.getStockMarketIndices(Stockmarket.SubscribeRequest.newBuilder()
-                        .addAllIndexes(listOf(Stockmarket.Index.AEX))
+                        .addAllIndexes(listOf(Stockmarket.SingleIndexPattern.newBuilder().setIndex(Stockmarket.Index.AEX).setUpperBound(-1.0).setLowerBound(-1.0).build()))
                         .build())
                 stockMarketIndices.forEachRemaining { r: Stockmarket.Response -> print(r.value.toString() + " " + r.index) }
             } catch (e: Exception) {
