@@ -23,12 +23,11 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
 
     private fun isEventObserved(response: Stockmarket.Response, request: Stockmarket.SubscribeRequest): Boolean {
         request.indexesList.forEach { pattern ->
-            println(pattern.index.toString() + "  " + response.value + " " + isInRange(pattern, response))
             if (pattern.index == response.index && isInRange(pattern, response)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
 

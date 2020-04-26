@@ -12,7 +12,7 @@ class EventGenerator {
     }
 
     fun removeSubscription(callback: (Stockmarket.Response) -> Unit) {
-        subscriptions.remove(callback);
+        subscriptions.remove(callback)
     }
 
     fun startGenerating() {
@@ -25,17 +25,18 @@ class EventGenerator {
             Stockmarket.Index.values()
                     .filter { index -> index != Stockmarket.Index.UNRECOGNIZED }
                     .forEach { index -> generateEvent(index) }
-            Thread.sleep(1000)
         }
     }
 
     private fun generateEvent(index: Stockmarket.Index) {
         val indexValue = Random.nextDouble(0.0, 100000.0)
         val response = buildResponse(index, indexValue)
+        println(response)
         subscriptions.forEach { sub ->
             sub(response!!)
-            sub.invoke(response)
+            sub(response)
         }
+        Thread.sleep(500)
     }
 
     private fun buildResponse(index: Stockmarket.Index, indexValue: Double): Stockmarket.Response? {

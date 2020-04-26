@@ -2,19 +2,17 @@ syntax = "proto3";
 option java_package = "se.proto";
 
 enum Index {
-    FTSE_100 = 0;
-    CAC_40 = 1;
-    AEX = 2;
-    DOW_JONES = 3;
-    S_AND_P_500 = 4;
-    DAX = 5;
-    MOEX = 6;
-    ICEX = 7;
-    WIG = 8;
-    NIKKEI_225 = 9;
-    SHANGHAI = 10;
-    ASX_50 = 11;
-    NASDAQ = 12;
+    NASDAQ = 0;
+    AEX = 1;
+    DOWJONES = 2;
+    SP500 = 3;
+    DAX = 4;
+    MOEX = 5;
+    ICEX = 6;
+    WIG = 7;
+    NIKKEI225 = 8;
+    SHANGHAI = 9;
+    ASX50 = 10;
 }
 
 message SingleIndexPattern {
