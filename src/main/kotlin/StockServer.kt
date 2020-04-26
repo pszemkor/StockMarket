@@ -8,13 +8,13 @@ class StockServer(private val port: Int) {
     private var server: Server? = null
     fun init() {
         val eventGenerator = EventGenerator()
-        eventGenerator.startGenerating()
         server = ServerBuilder.forPort(port)
                 .addService(StockMarketService(eventGenerator))
                 .build()
                 .start()
-
         logger.info("Server running on port $port")
+        eventGenerator.generateEvents()
+
 
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {

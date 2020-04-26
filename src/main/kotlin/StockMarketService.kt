@@ -8,6 +8,7 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
     override fun getStockMarketIndices(request: Stockmarket.SubscribeRequest?, responseObserver: StreamObserver<Stockmarket.Response>?) {
         val callback = { response: Stockmarket.Response ->
             if (isEventObserved(response, request!!)) {
+                println(response)
                 responseObserver?.onNext(response)
             }
         }
