@@ -5,7 +5,7 @@ import se.proto.Stockmarket
 
 class StockMarketService(private val eventGenerator: EventGenerator) : IndicesServiceGrpc.IndicesServiceImplBase() {
 
-    override fun getStockMarketIndices(request: Stockmarket.SubscribeRequest?, responseObserver: StreamObserver<Stockmarket.Response>?) {
+    override fun getStockMarketIndexes(request: Stockmarket.SubscribeRequest?, responseObserver: StreamObserver<Stockmarket.Response>?) {
         val callback = { response: Stockmarket.Response ->
             if (isEventObserved(response, request!!)) {
                 println(response)
@@ -16,6 +16,11 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
         eventGenerator.addSubscription(callback)
     }
 
+    override fun getAvailableIndexes(request: Stockmarket.IndexesRequest?, responseObserver: StreamObserver<Stockmarket.AvailableIndexes>?) {
+        responseObserver?.onNext(Stockmarket.AvailableIndexes.newBuilder().addAllIndexes(eventGenerator.availableIndexes).build())
+        responseObserver?.onCompleted()
+    }
+
     private fun setOnCancelHandler(responseObserver: StreamObserver<Stockmarket.Response>?, callback: (Stockmarket.Response) -> Unit) {
         if (responseObserver is ServerCallStreamObserver<Stockmarket.Response>) {
             responseObserver.setOnCancelHandler(Runnable { eventGenerator.removeSubscription(callback) })
@@ -24,7 +29,7 @@ class StockMarketService(private val eventGenerator: EventGenerator) : IndicesSe
 
     private fun isEventObserved(response: Stockmarket.Response, request: Stockmarket.SubscribeRequest): Boolean {
         request.indexesList.forEach { pattern ->
-            if (pattern.index == response.index && isInRange(pattern, response)) {
+            if (pattern.index.equals(response.index) && isInRange(pattern, response)) {
                 return true
             }
         }

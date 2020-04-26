@@ -1,22 +1,8 @@
 syntax = "proto3";
 option java_package = "se.proto";
 
-enum Index {
-    NASDAQ = 0;
-    AEX = 1;
-    DOWJONES = 2;
-    SP500 = 3;
-    DAX = 4;
-    MOEX = 5;
-    ICEX = 6;
-    WIG = 7;
-    NIKKEI225 = 8;
-    SHANGHAI = 9;
-    ASX50 = 10;
-}
-
 message SingleIndexPattern {
-    Index index = 1;
+    string index = 1;
     double lowerBound = 2;
     double upperBound = 3;
 }
@@ -26,11 +12,24 @@ message SubscribeRequest {
 }
 
 message Response {
-    Index index = 1;
+    enum State {
+        BULL = 0;
+        BEAR = 1;
+    }
+    string index = 1;
     double value = 2;
+    State state = 3;
+}
+message AvailableIndexes {
+    repeated string indexes = 1;
+}
+message IndexesRequest {
 }
 
+
 service IndicesService {
-    rpc GetStockMarketIndices (SubscribeRequest) returns (stream Response) {
+    rpc GetStockMarketIndexes (SubscribeRequest) returns (stream Response) {
+    }
+    rpc GetAvailableIndexes (IndexesRequest) returns (AvailableIndexes) {
     }
 }
