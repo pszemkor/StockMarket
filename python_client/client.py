@@ -15,7 +15,7 @@ def user_input_handler():
             if (lower_bound > upper_bound) and (lower_bound > 0 and upper_bound > 0):
                 print("Invalid bounds, index want be remembered!")
             indexes.add((index, lower_bound, upper_bound))
-            response = input("Would you like to add another index? (y/n)")
+            response = input("Would you like to add another index? (y/n): ")
             if response != 'y':
                 break
         except Exception as e:
@@ -56,7 +56,7 @@ while True:
         for el in it:
             wait_time = max(0.1, wait_time / 2.0)
             i = next(it)
-            print("Index: {}, {}".format(number_to_name[i.index], i.value))
+            print("Index: {}: {}$".format(number_to_name[i.index], i.value))
     except Exception as e:
         print("error occured", str(e))
         sleep(wait_time)
