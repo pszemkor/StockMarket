@@ -1,5 +1,4 @@
-#### Project consist of proto file with interfaces and messages definitions.
-#### After generating files with use of protoc.exe user can start server implemented in Kotlin and client implemented in Python 3.
+#### Project consist of proto file with interfaces and messages definitions. After generating files with use of protoc.exe user can start server implemented in Kotlin and client implemented in Python 3.
 #### Client shall pick stock market indexes with lower/upper boundary for its values. When indexes are chosen server will be sending notifications.
 
 This command generates files:
