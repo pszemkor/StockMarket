@@ -1,12 +1,15 @@
 import se.proto.Stockmarket
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.logging.Logger
 import kotlin.random.Random
 
 //todo: in the future this class will be reading indexes' values from rest api
 class EventGenerator {
+    private val logger = Logger.getLogger(EventGenerator::class.java.name)
+    private val subscriptions = CopyOnWriteArrayList<((Stockmarket.Response) -> Unit)>()
+
     val availableIndexes = listOf("NASDAQ", "AEX", "DOWJONES", "SP500", "DAX", "MOEX",
             "ICEX", "WIG", "NIKKEI225", "SHANGHAI", "ASX50")
-    private val subscriptions = CopyOnWriteArrayList<((Stockmarket.Response) -> Unit)>()
 
     fun addSubscription(callback: (Stockmarket.Response) -> Unit) {
         subscriptions.add(callback)
@@ -18,15 +21,15 @@ class EventGenerator {
 
     fun generateEvents() {
         while (true) {
-            availableIndexes
-                    .forEach { index -> generateEvent(index) }
+            availableIndexes.forEach { index -> generateEvent(index) }
         }
     }
 
     private fun generateEvent(index: String) {
         val indexValue = Random.nextDouble(0.0, 100000.0)
         val response = buildResponse(index, indexValue)
-        Thread.sleep(500)
+        logger.info("${response.index} : ${response.value}")
+        Thread.sleep(Random(0).nextLong(200, 800))
         subscriptions.forEach { sub -> sub(response) }
     }
 
